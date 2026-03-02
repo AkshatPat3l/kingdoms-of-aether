@@ -24,7 +24,7 @@ export enum TerrainType {
  */
 
 export interface Tile {
-    coordinate: Coordinate;
+    position: Coordinate;
     terrain: TerrainType;
     owner: "PLAYER" | "AI" | null;
 }
