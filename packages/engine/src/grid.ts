@@ -1,3 +1,26 @@
+/**
+ * A 20*20 grid contains:
+ * -V(vertices) = 400 nodes
+ * 
+ * Each row has (n-1) horizontal edges
+ * Each column has (n-1) veritcal edges
+ * 
+ * total edges in an  n x n grid:
+ * E = 2n(n-1)
+ * 
+ * For n=20:
+ * E=2(20)(19)=760
+ * 
+ * Since E ≈ 2V in grid graphs,
+ * traversal algorithms like BFS and DFS
+ * run in approximately O(V) time.
+ */
+
+
+
+
+
+
 import { Tile, TerrainType, Coordinate } from "./types";
 
 /**
