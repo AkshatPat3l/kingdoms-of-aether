@@ -53,19 +53,41 @@ export class GameEngine {
       throw new Error("Unit not found");
     }
 
-    if (unit.owner != this.state.currentTurn) {
+    // Ensure correct turn
+    if (unit.owner !== this.state.currentTurn) {
       throw new Error("Not this unit's turn");
     }
 
+    // Prevent stacking (no two units on same tile)
+    const occupied = this.state.units.some(
+      (u) =>
+        u.id !== unitId &&
+        u.position.x === newPosition.x &&
+        u.position.y === newPosition.y,
+    );
+
+    if (occupied) {
+      throw new Error("Invalid move: tile is occupied");
+    }
+
+    // Validate movement range using BFS
     const reachable = bfsReachable(
       this.grid,
       unit.position,
       unit.movementRange,
     );
 
+    const isReachable = reachable.some(
+      (r) => r.x === newPosition.x && r.y === newPosition.y,
+    );
+
+    if (!isReachable) {
+      throw new Error("Invalid move: out of range");
+    }
+
+    // Apply move
     unit.position = newPosition;
   }
-
   /**
    * Ends current turn and switches palyer
    */
