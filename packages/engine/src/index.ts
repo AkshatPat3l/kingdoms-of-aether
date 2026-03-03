@@ -5,3 +5,4 @@ export * from "./bfs";
 export * from "./stack";
 export * from "./dfs";
 export * from "./minHeap";
+export * from "./dijkstra";
