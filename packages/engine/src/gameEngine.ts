@@ -1,6 +1,7 @@
 import { GameState, Turn, Coordinate } from "./types";
 import { Grid } from "./grid";
-
+import { bfsReachable } from "./bfs";
+import { key as coordkey } from "./utils";
 /**
  * GameEngine
  *
@@ -11,13 +12,13 @@ import { Grid } from "./grid";
 
 export class GameEngine {
   private state: GameState;
-
+  private grid: Grid;
   constructor(width: number, height: number) {
-    const grid = new Grid(width, height);
+    this.grid = new Grid(width, height);
     this.state = {
       width,
       height,
-      tiles: grid.tiles,
+      tiles: this.grid.tiles,
       units: [],
       currentTurn: Turn.PLAYER,
       turnNumber: 1,
@@ -51,6 +52,16 @@ export class GameEngine {
     if (!unit) {
       throw new Error("Unit not found");
     }
+
+    if (unit.owner != this.state.currentTurn) {
+      throw new Error("Not this unit's turn");
+    }
+
+    const reachable = bfsReachable(
+      this.grid,
+      unit.position,
+      unit.movementRange,
+    );
 
     unit.position = newPosition;
   }
