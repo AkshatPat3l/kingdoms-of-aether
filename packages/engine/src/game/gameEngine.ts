@@ -13,18 +13,17 @@ import { key as coordkey } from "../core/utils";
 export class GameEngine {
   private state: GameState;
   private grid: Grid;
+
   constructor(width: number, height: number) {
     this.grid = new Grid(width, height);
+
     this.state = {
-      width,
-      height,
-      tiles: this.grid.tiles,
+      grid: this.grid,
       units: [],
       currentTurn: Turn.PLAYER,
       turnNumber: 1,
     };
   }
-
   /**
    * Returns current immutable state
    */
