@@ -2,6 +2,8 @@
  Represents a position  on the grid
  **/
 
+import { Grid } from "./grid";
+
 export interface Coordinate {
   x: number;
   y: number;
@@ -53,9 +55,7 @@ export interface Unit {
  * This is the single source of truth for the engine.
  */
 export interface GameState {
-  width: number;
-  height: number;
-  tiles: Tile[][];
+  grid: Grid;
   units: Unit[];
   currentTurn: Turn;
   turnNumber: number;
