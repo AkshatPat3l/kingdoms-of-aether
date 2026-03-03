@@ -9,3 +9,4 @@ export * from "./dijkstra";
 export * from "./astar";
 export * from "./unionFind";
 export * from "./territory";
+export * from "./gameEngine";
