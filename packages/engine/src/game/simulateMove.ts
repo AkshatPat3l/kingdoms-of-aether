@@ -1,20 +1,18 @@
-import { GameState, Unit } from "../core";
+import { GameState, Unit, Turn } from "../core/types";
 import { Move } from "./moveGenerator";
 
 /**
- * Deep clones the GameState
- * Uses structuredClone (Node 17+ / modern runtime)
+ * Deep clones the GameState.
+ * Uses structuredClone (modern runtime).
  */
-
 function cloneState(state: GameState): GameState {
   return structuredClone(state);
 }
 
 /**
- * Pure version of move application
- * Does not mutate original state
+ * Pure version of move application.
+ * Does NOT mutate original state.
  */
-
 export function simulateMove(state: GameState, move: Move): GameState {
   const newState = cloneState(state);
 
@@ -29,12 +27,12 @@ export function simulateMove(state: GameState, move: Move): GameState {
       u.position.x === move.target.x && u.position.y === move.target.y,
   );
 
-  //If enemy present => COMBAT
-  if (targetUnit && targetUnit.owner != unit.owner) {
-    //Attacker hits
+  // ----- Combat -----
+  if (targetUnit && targetUnit.owner !== unit.owner) {
+    // Attacker hits first
     targetUnit.health -= unit.attack;
 
-    //Counterattack if defender survives
+    // Counterattack if defender survives
     if (targetUnit.health > 0) {
       unit.health -= targetUnit.attack;
     }
@@ -46,27 +44,22 @@ export function simulateMove(state: GameState, move: Move): GameState {
       newState.units = newState.units.filter(
         (u: Unit) => u.id !== unit.id && u.id !== targetUnit.id,
       );
-      return newState;
-    }
-
-    if (defenderDead) {
+    } else if (defenderDead) {
       newState.units = newState.units.filter(
         (u: Unit) => u.id !== targetUnit.id,
       );
       unit.position = move.target;
-      return newState;
-    }
-
-    if (attackerDead) {
+    } else if (attackerDead) {
       newState.units = newState.units.filter((u: Unit) => u.id !== unit.id);
-      return newState;
     }
-
-    //Empty tile => normal movement
+  } else {
+    // ----- Empty tile → normal movement -----
     unit.position = move.target;
-
-    return newState;
   }
+
+  // ----- Switch Turn -----
+  newState.currentTurn =
+    newState.currentTurn === Turn.PLAYER ? Turn.AI : Turn.PLAYER;
 
   return newState;
 }
