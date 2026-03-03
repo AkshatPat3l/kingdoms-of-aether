@@ -7,3 +7,5 @@ export * from "./dfs";
 export * from "./minHeap";
 export * from "./dijkstra";
 export * from "./astar";
+export * from "./unionFind";
+export * from "./territory";
