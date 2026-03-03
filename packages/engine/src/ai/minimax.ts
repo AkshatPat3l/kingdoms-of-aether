@@ -1,4 +1,4 @@
-import { GameState } from "../core/types";
+import { GameState, Turn } from "../core/types";
 import { generateLegalMoves, Move } from "../game/moveGenerator";
 import { simulateMove } from "../game/simulateMove";
 import { evaluate } from "./evaluate";
@@ -11,17 +11,19 @@ export interface MinimaxResult {
 export function minimax(
   state: GameState,
   depth: number,
-  maximizing: boolean,
+  perspective: Turn,
 ): MinimaxResult {
   if (depth === 0) {
-    return { score: evaluate(state), move: null };
+    return { score: evaluate(state, perspective), move: null };
   }
 
   const moves = generateLegalMoves(state);
 
   if (moves.length === 0) {
-    return { score: evaluate(state), move: null };
+    return { score: evaluate(state, perspective), move: null };
   }
+
+  const maximizing = state.currentTurn === perspective;
 
   let bestMove: Move | null = null;
 
@@ -30,7 +32,7 @@ export function minimax(
 
     for (const move of moves) {
       const newState = simulateMove(state, move);
-      const result = minimax(newState, depth - 1, false);
+      const result = minimax(newState, depth - 1, perspective);
 
       if (result.score > maxEval) {
         maxEval = result.score;
@@ -44,7 +46,7 @@ export function minimax(
 
     for (const move of moves) {
       const newState = simulateMove(state, move);
-      const result = minimax(newState, depth - 1, true);
+      const result = minimax(newState, depth - 1, perspective);
 
       if (result.score < minEval) {
         minEval = result.score;
