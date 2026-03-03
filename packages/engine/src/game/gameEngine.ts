@@ -1,7 +1,7 @@
 import { GameState, Turn, Coordinate } from "../core/types";
 import { Grid } from "../core/grid";
 import { bfsReachable } from "../pathfinding/bfs";
-import { key as coordkey } from "../core/utils";
+import { minimax } from "../ai/minimax";
 /**
  * GameEngine
  *
@@ -131,7 +131,8 @@ export class GameEngine {
    */
 
   endTurn(): void {
-    this.state.currentTurn === Turn.PLAYER ? Turn.AI : Turn.PLAYER;
+    this.state.currentTurn =
+      this.state.currentTurn === Turn.PLAYER ? Turn.AI : Turn.PLAYER;
 
     this.state.turnNumber += 1;
   }
@@ -141,5 +142,30 @@ export class GameEngine {
    */
   getCurrentTurn(): Turn {
     return this.state.currentTurn;
+  }
+
+  makeAIMove(depth: number): void {
+    // Ensure it is AI's turn
+    if (this.state.currentTurn !== Turn.AI) {
+      throw new Error("It is not AI's turn");
+    }
+
+    // Clone state to protect engine from accidental mutation
+    const stateSnapshot = structuredClone(this.state);
+
+    // Run minimax from AI perspective
+    const result = minimax(stateSnapshot, depth, Turn.AI);
+
+    if (!result.move) {
+      console.log("AI has no valid moves");
+      this.endTurn();
+      return;
+    }
+
+    // Apply authoritative move through engine mutation method
+    this.moveUnit(result.move.unitId, result.move.target);
+
+    // End AI turn
+    this.endTurn();
   }
 }

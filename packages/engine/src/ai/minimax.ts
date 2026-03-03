@@ -12,6 +12,8 @@ export function minimax(
   state: GameState,
   depth: number,
   perspective: Turn,
+  alpha: number = -Infinity,
+  beta: number = Infinity,
 ): MinimaxResult {
   if (depth === 0) {
     return { score: evaluate(state, perspective), move: null };
@@ -24,7 +26,6 @@ export function minimax(
   }
 
   const maximizing = state.currentTurn === perspective;
-
   let bestMove: Move | null = null;
 
   if (maximizing) {
@@ -32,11 +33,18 @@ export function minimax(
 
     for (const move of moves) {
       const newState = simulateMove(state, move);
-      const result = minimax(newState, depth - 1, perspective);
+      const result = minimax(newState, depth - 1, perspective, alpha, beta);
 
       if (result.score > maxEval) {
         maxEval = result.score;
         bestMove = move;
+      }
+
+      alpha = Math.max(alpha, maxEval);
+
+      // 🔥 PRUNE
+      if (beta <= alpha) {
+        break;
       }
     }
 
@@ -46,11 +54,18 @@ export function minimax(
 
     for (const move of moves) {
       const newState = simulateMove(state, move);
-      const result = minimax(newState, depth - 1, perspective);
+      const result = minimax(newState, depth - 1, perspective, alpha, beta);
 
       if (result.score < minEval) {
         minEval = result.score;
         bestMove = move;
+      }
+
+      beta = Math.min(beta, minEval);
+
+      // 🔥 PRUNE
+      if (beta <= alpha) {
+        break;
       }
     }
 
