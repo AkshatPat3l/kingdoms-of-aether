@@ -1,36 +1,22 @@
 {
   "compilerOptions": {
-    /* =========================
-       Output & Module Settings
-       ========================= */
     "target": "ES2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "rootDir": "./src",
     "outDir": "./dist",
-    /* =========================
-       Strictness & Safety
-       ========================= */
+
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    /* =========================
-       Interop & Compatibility
-       ========================= */
+
     "esModuleInterop": true,
     "skipLibCheck": true,
-    /* =========================
-       Quality of Life
-       ========================= */
+
     "sourceMap": true,
     "declaration": true
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

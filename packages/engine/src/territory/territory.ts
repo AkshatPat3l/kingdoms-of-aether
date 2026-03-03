@@ -1,6 +1,6 @@
-import { Grid } from "./grid";
+import { Grid } from "../core/grid";
 import { UnionFind } from "./unionFind";
-import { Coordinate } from "./types";
+import { Coordinate } from "../core/types";
 
 /**
  * Territory detection using Union-Find

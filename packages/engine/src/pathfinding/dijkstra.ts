@@ -1,6 +1,6 @@
-import { Coordinate, TerrainType } from "./types";
-import { Grid } from "./grid";
-import { MinHeap } from "./minHeap";
+import { Coordinate, TerrainType } from "../core/types";
+import { Grid } from "../core/grid";
+import { MinHeap } from "../pathfinding/minHeap";
 
 /**
  * Dijkstra's Algorithm

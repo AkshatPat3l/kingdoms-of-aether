@@ -1,7 +1,7 @@
-import { GameState, Turn, Coordinate } from "./types";
-import { Grid } from "./grid";
-import { bfsReachable } from "./bfs";
-import { key as coordkey } from "./utils";
+import { GameState, Turn, Coordinate } from "../core/types";
+import { Grid } from "../core/grid";
+import { bfsReachable } from "../pathfinding/bfs";
+import { key as coordkey } from "../core/utils";
 /**
  * GameEngine
  *
