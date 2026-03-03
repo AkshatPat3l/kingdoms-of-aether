@@ -4,3 +4,4 @@ export * from "./queue";
 export * from "./bfs";
 export * from "./stack";
 export * from "./dfs";
+export * from "./minHeap";
