@@ -3,10 +3,9 @@
  **/
 
 export interface Coordinate {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
-
 
 /**
  * Different Terrain Types.
@@ -14,9 +13,9 @@ export interface Coordinate {
  */
 
 export enum TerrainType {
-    PLAIN = "PLAIN",
-    FOREST = "FOREST",
-    MOUNTAIN = "MOUNTAIN",
+  PLAIN = "PLAIN",
+  FOREST = "FOREST",
+  MOUNTAIN = "MOUNTAIN",
 }
 
 /**
@@ -24,28 +23,29 @@ export enum TerrainType {
  */
 
 export interface Tile {
-    position: Coordinate;
-    terrain: TerrainType;
-    owner: "PLAYER" | "AI" | null;
+  position: Coordinate;
+  terrain: TerrainType;
+  owner: "PLAYER" | "AI" | null;
 }
 
 /*
  *Represents whose turn it is
-*/
+ */
 export enum Turn {
-    PLAYER = "PLAYER",
-    AI = "AI",
+  PLAYER = "PLAYER",
+  AI = "AI",
 }
 
 /**
  * Represents a unit on the board.
  */
 export interface Unit {
-    id: string;
-    position: Coordinate;
-    hp: number;
-    movementRange: number;
-    owner: "PLAYER" | "AI";
+  id: string;
+  owner: Turn;
+  position: Coordinate;
+  movementRange: number;
+  health: number;
+  attack: number;
 }
 
 /**
@@ -53,12 +53,10 @@ export interface Unit {
  * This is the single source of truth for the engine.
  */
 export interface GameState {
-    width: number;
-    height: number;
-    tiles: Tile[][];
-    units: Unit[];
-    currentTurn: Turn;
-    turnNumber: number;
+  width: number;
+  height: number;
+  tiles: Tile[][];
+  units: Unit[];
+  currentTurn: Turn;
+  turnNumber: number;
 }
-
-

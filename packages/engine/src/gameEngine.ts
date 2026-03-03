@@ -53,24 +53,10 @@ export class GameEngine {
       throw new Error("Unit not found");
     }
 
-    // Ensure correct turn
     if (unit.owner !== this.state.currentTurn) {
       throw new Error("Not this unit's turn");
     }
 
-    // Prevent stacking (no two units on same tile)
-    const occupied = this.state.units.some(
-      (u) =>
-        u.id !== unitId &&
-        u.position.x === newPosition.x &&
-        u.position.y === newPosition.y,
-    );
-
-    if (occupied) {
-      throw new Error("Invalid move: tile is occupied");
-    }
-
-    // Validate movement range using BFS
     const reachable = bfsReachable(
       this.grid,
       unit.position,
@@ -85,7 +71,60 @@ export class GameEngine {
       throw new Error("Invalid move: out of range");
     }
 
-    // Apply move
+    const targetUnit = this.state.units.find(
+      (u) => u.position.x === newPosition.x && u.position.y === newPosition.y,
+    );
+
+    if (targetUnit) {
+      if (targetUnit.owner === unit.owner) {
+        throw new Error("Invalid move: tile occupied by ally");
+      }
+
+      // ----- Combat -----
+
+      // Attacker hits first
+      targetUnit.health -= unit.attack;
+
+      // If defender survives → counterattack
+      if (targetUnit.health > 0) {
+        unit.health -= targetUnit.attack;
+      }
+
+      // Handle deaths
+
+      const attackerDead = unit.health <= 0;
+      const defenderDead = targetUnit.health <= 0;
+
+      if (attackerDead && defenderDead) {
+        // Remove both
+        this.state.units = this.state.units.filter(
+          (u) => u.id !== unit.id && u.id !== targetUnit.id,
+        );
+        return;
+      }
+
+      if (defenderDead) {
+        // Remove defender
+        this.state.units = this.state.units.filter(
+          (u) => u.id !== targetUnit.id,
+        );
+
+        // Attacker survives → move into tile
+        unit.position = newPosition;
+        return;
+      }
+
+      if (attackerDead) {
+        // Remove attacker
+        this.state.units = this.state.units.filter((u) => u.id !== unit.id);
+        return;
+      }
+
+      // Both survive → no movement
+      return;
+    }
+
+    // Empty tile → normal movement
     unit.position = newPosition;
   }
   /**
